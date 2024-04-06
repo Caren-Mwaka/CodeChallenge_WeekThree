@@ -37,13 +37,20 @@ body {
   content: "";
 }
 
-.film {
+.film-item {
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
   font-size: 16px;
-  text-transform: uppercase;
+  text-transform: uppercase; 
+  border-bottom: 1px solid #333333; 
+  font-weight: bold; 
 }
 
 .sold-out {
   color: lightgray;
+  text-decoration: line-through;
+  opacity: 0.5;
 }
 
 img {
@@ -52,4 +59,23 @@ img {
 
 #film-info {
   padding-bottom: 15px;
+}
+
+.delete {
+  background-color: rgb(206, 48, 48);
+  color: white;
+  padding: 3px 8px; 
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 20px;
+  margin-bottom: 3px;
+  font-size: 12px; 
+  position: absolute; 
+  right: 0; 
+  bottom: 0; 
+}
+
+.delete:hover {
+  background-color: lightgreen;
 }
