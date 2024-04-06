@@ -1,28 +1,29 @@
 // Initial Load
+// ensures that my JavaScript runs after the HTML document has been completely loaded.
 document.addEventListener("DOMContentLoaded", () => {
-  // DOM Elements
-  const poster = document.getElementById("poster");
+
+  // My DOM Elements - selecting various DOM elements using getElementById() method and storing them in variables.
+  // The getElementById() method of the document interface returns an element object representing the element whose id property matches the specified string.   const poster = document.getElementById("poster");
   const title = document.getElementById("title");
   const runtime = document.getElementById("runtime");
   const showtime = document.getElementById("showtime");
   const ticketsRemaining = document.getElementById("ticket-num");
   const description = document.getElementById("film-info");
   const listOfFilms = document.getElementById("films");
-
   let availableTickets;
 
-  // Load Movie Details
-  function loadMovieDetails(id) {
+  // Load Film Details
+  function loadFilmDetails(id) {
     fetch(`http://localhost:3000/films/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        movieDetails(data);
+        filmDetails(data);
       })
       .catch((error) => console.error("Error:", error));
   }
 
-  // Display Movie Details
-  function movieDetails(film) {
+  // Display Film Details
+  function filmDetails(film) {
     poster.src = film.poster;
     title.textContent = film.title;
     runtime.textContent = `${film.runtime} minutes`;
@@ -42,35 +43,42 @@ document.addEventListener("DOMContentLoaded", () => {
       buyButton.addEventListener("click", () => {
         buyTicket(film.id);
       });
+//I used the .setAttribute() and .removeAttribute() methods to add and remove the disabled attribute of the button.
+//When the disabled attribute is present on the HTML button element, the button becomes unclickable.
+
     }
   }
-  loadMovieDetails(1);
+  loadFilmDetails(1);
 
-  // Load Movie List
-  function loadMovieList() {
+  // Load Film List
+  function loadFilmList() {
     fetch("http://localhost:3000/films")
       .then((response) => response.json())
       .then((data) => {
-        moviesList(data);
-        addClickEventToMovies();
+        filmList(data);
+        addClickEventToFilms();
       })
       .catch((error) => console.error("Error:", error));
   }
 
-  // Display Movie List
-  function moviesList(films) {
-    
-    // Clear the existing list
+// Display Film List
+  function filmList(films) {
+
+// Clearing the existing list
     while (listOfFilms.firstChild) {
       listOfFilms.removeChild(listOfFilms.firstChild);
     }
+//The while loop iterates over the child nodes of listOfFilms.
+//The listOfFilms.removeChild() method removes each child node (movie list item) from listOfFilms one by one.
 
-    // Create and append list items for each film
+// Creating and appending a list items for each film
     films.forEach((film) => {
       const listItem = document.createElement("li");
       listItem.className = "film-item";
       listItem.textContent = film.title;
       listItem.setAttribute("data-id", film.id);
+//iterating through the array of film objects using films.forEach((film) => {...}) to create new list items for each film and append them to the DOM.
+//also set its class name and text content, and added a delete button to each film item.
 
       const deleteButton = document.createElement("button");
       deleteButton.className = "delete";
@@ -81,15 +89,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (film.capacity - film.tickets_sold === 0) {
         listItem.classList.add("sold-out");
-      }
+      }//also added a "sold-out" class to the list item. This caters for when there are no available tickets for a particular movie.
 
-      listItem.appendChild(deleteButton);
-      listOfFilms.appendChild(listItem);
+      listItem.appendChild(deleteButton);// appending the delete button to the new list element.
+      listOfFilms.appendChild(listItem);// appending the new list of items to the unordered list.
     });
   }
-  loadMovieList();
+  loadFilmList();
 
-  // Delete Film
+  // Deleting a film
   function deleteFilm(id) {
     fetch(`http://localhost:3000/films/${id}`, {
       method: "DELETE",
@@ -100,9 +108,16 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => console.error("Error:", error));
   }
+//deleteFilm(id) is a function that takes a film ID as an argument.
+//Inside this function,the fetch() function is used to send a DELETE request to the server to delete a film with the specified id.
+//Once the film is successfully deleted from the server, it removes the corresponding film item from the DOM by selecting the film item using its data-id attribute and removing it from its parent element.
 
-  // Buy Ticket
+  // Buying a ticket
   function buyTicket(id) {
+    //The buyTicket(id) function allows a user to buy a ticket for a specific film.
+    //It first fetches the film details to check if tickets are available.
+    //If tickets are available, it updates the tickets_sold count for that film on the server using a PATCH request.
+
     fetch(`http://localhost:3000/films/${id}`)
       .then((response) => response.json())
       .then((film) => {
@@ -118,8 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }),
           })
             .then(() => {
-              loadMovieDetails(id);
-              recordPurchase(id, 1); // Recording 1 ticket purchase
+              loadFilmDetails(id);
+              recordPurchase(id, 1); // records the purchase of 1 ticket for a film of a particular id.
             })
             .catch((error) => console.error("Error:", error));
         }
@@ -131,9 +146,11 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(
       `Purchased ${numberOfTickets} ticket(s) for film with ID: ${filmId}`
     );
+    //recordPurchase is a function that logs a message to the console when a ticket purchase is recorded.
+    //It displays the film ID and the number of tickets purchased in the console log.
   }
 
-  // Post Ticket
+  // Posting a ticket
   function postTicket(filmId, numberOfTickets) {
     fetch("http://localhost:3000/tickets", {
       method: "POST",
@@ -149,18 +166,21 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => console.log("Ticket purchased:", data))
       .catch((error) => console.error("Error:", error));
   }
+  //the fetch function is used to send a POST request to the server to add a new ticket.
+  //postTicket is a function that posts a new ticket purchase to the server.
   postTicket(28, 5);
 
-  // Add Click Event to Movies
-  function addClickEventToMovies() {
+  // Adding Click Event to Films
+  function addClickEventToFilms() {
     const filmItems = document.querySelectorAll(".film-item");
     filmItems.forEach((item) => {
       item.addEventListener("click", () => {
         const filmId = item.getAttribute("data-id");
-        loadMovieDetails(filmId);
+        loadFilmDetails(filmId);
       });
     });
   }
-
-  addClickEventToMovies();
+ //addClickEventToFilms is a function that adds a click event listener to each film item displayed on the webpage.
+ //When a film item is clicked, it retrieves the film id from the data-id attribute and loads the details of the clicked film.
+  addClickEventToFilms();
 });

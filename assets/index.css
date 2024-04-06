@@ -36,7 +36,7 @@ body {
 #films li::before {
   content: "";
 }
-
+/* added styling for the list of items */
 .film-item {
   display: flex; 
   align-items: center; 
@@ -46,7 +46,7 @@ body {
   border-bottom: 1px solid #333333; 
   font-weight: bold; 
 }
-
+/* also added some styling for when a movie is sold out */
 .sold-out {
   color: lightgray;
   text-decoration: line-through;
@@ -60,7 +60,7 @@ img {
 #film-info {
   padding-bottom: 15px;
 }
-
+/* added styling for the delete button */
 .delete {
   background-color: rgb(206, 48, 48);
   color: white;
@@ -74,6 +74,7 @@ img {
   position: absolute; 
   right: 0; 
   bottom: 0; 
+  top: 0;
 }
 
 .delete:hover {
