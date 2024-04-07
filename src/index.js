@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
       buyButton.textContent = "Buy Ticket";
       buyButton.removeAttribute("disabled");
       buyButton.addEventListener("click", (e) => {
-        e.preventDefault();// Prevents the default action of the button click,ensureS that clicking the button only executes the JS code inside the event listener
+        e.preventDefault();// Prevents the default action of the button click,ensures that clicking the button only executes the JS code inside the event listener
         buyTicket(film.id);
       });
 //I used the .setAttribute() and .removeAttribute() methods to add and remove the disabled attribute of the button.
