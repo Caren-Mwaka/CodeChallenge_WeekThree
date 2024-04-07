@@ -3,7 +3,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   // My DOM Elements - selecting various DOM elements using getElementById() method and storing them in variables.
-  // The getElementById() method of the document interface returns an element object representing the element whose id property matches the specified string.   const poster = document.getElementById("poster");
+  // The getElementById() method of the document interface returns an element object representing the element whose id property matches the specified string.   
+  const poster = document.getElementById("poster");
   const title = document.getElementById("title");
   const runtime = document.getElementById("runtime");
   const showtime = document.getElementById("showtime");
