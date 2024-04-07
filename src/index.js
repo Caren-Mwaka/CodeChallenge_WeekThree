@@ -15,7 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Load Film Details
   function loadFilmDetails(id) {
     fetch(`http://localhost:3000/films/${id}`)
-      .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to load film details');
+      }
+      return response.json();
+    })
       .then((data) => {
         filmDetails(data);
       })
@@ -40,7 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       buyButton.textContent = "Buy Ticket";
       buyButton.removeAttribute("disabled");
-      buyButton.addEventListener("click", () => {
+      buyButton.addEventListener("click", (e) => {
+        e.preventDefault();// Prevents the default action of the button click,ensureS that clicking the button only executes the JS code inside the event listener
         buyTicket(film.id);
       });
 //I used the .setAttribute() and .removeAttribute() methods to add and remove the disabled attribute of the button.
@@ -102,6 +108,12 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch(`http://localhost:3000/films/${id}`, {
       method: "DELETE",
     })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Delete request failed');
+      }
+      return response.json();
+    })
       .then(() => {
         const filmItem = document.querySelector(`#films li[data-id="${id}"]`);
         filmItem.remove();
@@ -119,7 +131,12 @@ document.addEventListener("DOMContentLoaded", () => {
     //If tickets are available, it updates the tickets_sold count for that film on the server using a PATCH request.
 
     fetch(`http://localhost:3000/films/${id}`)
-      .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to buy a ticket');
+      }
+      return response.json();
+    })
       .then((film) => {
         if (film.tickets_sold < film.capacity) {
           const newTicketsSold = film.tickets_sold + 1;
